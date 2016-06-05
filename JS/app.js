@@ -2,7 +2,7 @@ $(function(){
     var loadAllBooks = function(){
       var bookList = $("#listWithBooks");
       $.ajax({
-          url:"http://192.168.33.22/REST_bookshelf/API/books.php",
+          url:"http://192.168.33.22/bookshelf/E-Bookshelf/API/books.php",
           method:"GET",
           dataType: "json"
       }).done(function(bookNamesArray){
@@ -28,7 +28,7 @@ $(function(){
             var bookId=$(this).parent().data("id");
             var showButton = $(this);
             $.ajax({
-                url: "http://192.168.33.22/REST_bookshelf/API/books.php",
+                url: "http://192.168.33.22/bookshelf/E-Bookshelf/API/books.php",
                 method: "GET",
                 data: {id : bookId},
                 dataType: "json"
@@ -50,11 +50,35 @@ $(function(){
             hideButton.addClass("showBtn");
         });
     };
-    
+    var addNewBook = function(){
+        var addBookForm = $("#addBook");
+       
+        addBookForm.on("submit",function(event){
+            event.preventDefault();
+            var title = $(this).find("input[name=title]").prop('value');
+            var authorName = $(this).find("input[name=authorName]").prop('value');
+            var desc = $(this).find("textarea[name=desc]").prop('value');
+            $.ajax({
+                url: "http://192.168.33.22/bookshelf/E-Bookshelf/API/books.php",
+                method: "POST",
+                data: { title : title, authorName : authorName, desc : desc},
+                dataType: "text"
+            }).done(function(message){
+                console.log(message);
+            }).fail(function(xhr,status,error){
+                console.log("AJAX failed when adding new book");
+            });
+            $(this).find("input[name=title]").prop('value',"");
+            $(this).find("input[name=authorName]").prop('value',"");
+            $(this).find("textarea[name=desc]").prop('value',"");
+            loadAllBooks();
+        });
+    };
     
     
     loadAllBooks();
     showHideBookInfo();
+    addNewBook();
     
     
 });

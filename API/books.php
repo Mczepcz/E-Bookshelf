@@ -19,5 +19,15 @@ if($_SERVER["REQUEST_METHOD"]=== "GET"){
     
 }
 if($_SERVER["REQUEST_METHOD"]=== "POST"){
-    
+
+    $bookToSave = new Book();
+    $bookToSave->setTitle($_POST["title"]);
+    $bookToSave->setAuthorName($_POST["authorName"]);
+    $bookToSave->setDescription($_POST["desc"]);
+    if($bookToSave->saveToDB($conn)){
+        echo "Dodałem nową książkę";
+    }
+    else{
+        echo "Nie udało się dodać książki";
+    }
 }
