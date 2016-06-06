@@ -74,11 +74,29 @@ $(function(){
             loadAllBooks();
         });
     };
+    var deleteBook = function(){
+        var bookList = $("#listWithBooks");
+        bookList.on("click",".delBtn",function(event){
+            var bookId=$(this).parent().data("id");
+            $.ajax({
+                url: "http://192.168.33.22/bookshelf/E-Bookshelf/API/books.php",
+                method: "DELETE",
+                data: {id : bookId},
+                dataType: "text"   
+            }).done(function(message){
+                console.log(message);
+            }).fail(function(xhr,status,error){
+                console.log("AJAX falied when deleting new book");
+            });
+            loadAllBooks();
+        });       
+    };
     
     
     loadAllBooks();
     showHideBookInfo();
     addNewBook();
+    deleteBook();
     
     
 });

@@ -85,4 +85,14 @@ class Book {
         $ret['description'] = $this->description;
         return $ret;
     }
+    public function deleteFromDB(mysqli $conn){
+        $sql = "DELETE FROM Books WHERE id = {$this->id}";
+        if($conn->query($sql)){
+            return true;
+        }
+        else{
+            return false;
+        }
+           
+    }
 }

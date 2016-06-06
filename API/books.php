@@ -31,3 +31,15 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
         echo "Nie udało się dodać książki";
     }
 }
+if($_SERVER["REQUEST_METHOD"]==="DELETE"){
+    
+    parse_str(file_get_contents("php://input"),$deleteQuery);
+    $bookToDelete = new Book();
+    $bookToDelete->loadFromDB($deleteQuery['id'], $conn);
+    if($bookToDelete->deleteFromDB($conn)){
+        echo "Książka została usunięta";
+    }
+    else{
+        echo "Nie udało się usunąć książki";
+    }
+}
