@@ -43,3 +43,26 @@ if($_SERVER["REQUEST_METHOD"]==="DELETE"){
         echo "Nie udało się usunąć książki";
     }
 }
+if($_SERVER["REQUEST_METHOD"]==="PUT"){
+
+    parse_str(file_get_contents("php://input"),$putQuery);
+    $bookToEdit = new Book();
+    $bookToEdit->loadFromDB($putQuery['id'], $conn);
+ 
+    if(strlen($putQuery['title'])>0){
+        $bookToEdit->setTitle($putQuery['title']);
+    }
+    if(strlen($putQuery['authorName'])>0){
+        $bookToEdit->setAuthorName($putQuery['authorName']);
+    }
+    if(strlen($putQuery['desc'])>0){
+        $bookToEdit->setDescription($putQuery['desc']);
+    }
+
+    if($bookToEdit->saveToDB($conn)){
+        echo "Uaktualniłem wpis o książce";
+    }
+    else{
+        echo "Nie udało się uaktualnić wpisu";
+    }
+}

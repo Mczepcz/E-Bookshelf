@@ -4,22 +4,33 @@
         <title>E-Bookshelf</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="CSS/bootstrap.css" rel="stylesheet" type="text/css">
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script src="JS/app.js"></script>
     </head>
     <body>
-        <form id="addBook">
-            <label>Tytuł książki</label>
-            <input type="text" name="title"><br/>
-            <label>Autor książki</label>
-            <input type='text' name='authorName'><br/>
-            <label>Opis książki</label>
-            <textarea name='desc' rows ='10' cols='30'></textarea><br/>
-            <input type='submit' value='Dodaj książkę'>
-        </form>
-            
-        <ul id='listWithBooks'>
-            
-        </ul>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 ">
+                    <h1>E-bookshelf <small>Your personal library</small></h1>
+                </div>
+
+            </div>
+            <form id="addBook">
+                <div class="form-group">  
+                    <label>Tytuł książki</label>
+                    <input class="form-control" type="text" name="title"><br/>
+                    <label>Autor książki</label>
+                    <input class="form-control" type='text' name='authorName'><br/>
+                    <label>Opis książki</label>
+                    <textarea class="form-control" name='desc' rows ='10' cols='30'></textarea><br/>
+                    <input id="submitBtn" class="btn btn-primary" type='submit' value='Dodaj książkę'>
+                </div>
+            </form>
+
+            <ul class="list-group" id='listWithBooks'>
+
+            </ul>
+        </div>
     </body>
 </html>

@@ -11,8 +11,6 @@ class Book {
                 $ret[]=$row;
             }
         }
-        
-        
         return $ret;
         
     }
@@ -59,7 +57,11 @@ class Book {
             return false;
         }
         else{
-            $sql = "UPDATE Books";
+            $sql = "UPDATE Books SET name = '{$this->title}', author_name='{$this->author_name}', description ='{$this->description}' WHERE id = {$this->id}";
+            if($conn->query($sql)){ 
+                return true;
+            }
+            return false;
         }   
     }
     public function loadFromDB($id, mysqli $conn){

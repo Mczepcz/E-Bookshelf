@@ -8,9 +8,9 @@ $(function(){
       }).done(function(bookNamesArray){
           bookList.empty();
           for(var i = 0; i < bookNamesArray.length; i++){
-              var newLi = $("<li>");
-              var removeButton=$("<button class='delBtn'>Usuń</button>");
-              var showButton=$("<button class='showBtn'>Więcej informacji</button>");
+              var newLi = $("<li class='list-group-item lead'>");
+              var removeButton=$("<button class='delBtn btn btn-danger btn-sm pull-right'>Usuń</button>");
+              var showButton=$("<button class='showBtn btn btn-success btn-sm pull-right'>Więcej informacji</button>");
               newLi.attr("data-id", bookNamesArray[i].id);
               newLi.text(bookNamesArray[i].name);
               newLi.append(showButton);
@@ -33,7 +33,7 @@ $(function(){
                 data: {id : bookId},
                 dataType: "json"
             }).done(function(book){
-                var newDiv =$("<div><h1>"+book.title+"</h1><p>"+book.author_name +"</p><p>"+book.description+"</p></div");
+                var newDiv =$("<div><h3>"+book.title+"</h3><button class='editBtn btn btn-success btn-sm '>Włącz edycje</button><p class='authorName'><small>Author: </small><br/>"+book.author_name +"</p><p><small>Description: </small><br/>"+book.description+"</p></div");
                 showButton.parent().append(newDiv);
                 showButton.removeClass("showBtn");
                 showButton.text("Zwiń informacje");
@@ -64,6 +64,10 @@ $(function(){
                 data: { title : title, authorName : authorName, desc : desc},
                 dataType: "text"
             }).done(function(message){
+                $(this).find("input[name=title]").prop('value',"");
+                $(this).find("input[name=authorName]").prop('value',"");
+                $(this).find("textarea[name=desc]").prop('value',"");
+                loadAllBooks();
                 console.log(message);
             }).fail(function(xhr,status,error){
                 console.log("AJAX failed when adding new book");
@@ -85,18 +89,82 @@ $(function(){
                 dataType: "text"   
             }).done(function(message){
                 console.log(message);
+                loadAllBooks();
             }).fail(function(xhr,status,error){
                 console.log("AJAX falied when deleting new book");
             });
-            loadAllBooks();
+
         });       
     };
+    var editBook = function(){
+        var bookList = $("#listWithBooks");
+        bookList.on("click",".editBtn",function(event){
+            var editBtn=$(this);
+            editBtn.text("Wyłącz edycję");
+            editBtn.removeClass("editBtn");
+            editBtn.addClass("editOffBtn");
+            var bookId=$(this).parent().parent().data("id"); 
+            var editBookForm = $(this).parent().parent().parent().siblings("form");
+            editBookForm.children().children("#submitBtn").attr("value", "Zapisz zmiany");
+            editBookForm.off("submit");
+            saveEditedBook(bookId);
+            
+        });
+        bookList.on("click",".editOffBtn",function(event){
+            var editOffBtn=$(this);
+            editOffBtn.text("Włącz edycję");
+            editOffBtn.removeClass("editOffBtn");
+            editOffBtn.addClass("editBtn");
+            var editBookForm = $(this).parent().parent().parent().siblings("form");
+            editBookForm.children().children("#submitBtn").attr("value", "Dodaj książkę");
+            editBookForm.children().children("#submitBtn").removeClass("btn-success");
+            editBookForm.children().children("#submitBtn").addClass("btn-primary");
+            editBookForm.off("submit");
+            addNewBook();  
+        });  
+    };
+    var saveEditedBook = function(id){
+        var bookId = id;
+        var editBookForm = $("#addBook");
+        editBookForm.children().children("#submitBtn").attr("value", "Zapisz zmiany");
+        editBookForm.children().children("#submitBtn").removeClass("btn-primary");
+        editBookForm.children().children("#submitBtn").addClass("btn-success");
+        editBookForm.one("submit","",bookId,function(event){
+            event.preventDefault();
+            var title = $(this).find("input[name=title]").prop('value');
+            var authorName = $(this).find("input[name=authorName]").prop('value');
+            var desc = $(this).find("textarea[name=desc]").prop('value');
+            $.ajax({
+                url: "http://192.168.33.22/bookshelf/E-Bookshelf/API/books.php",
+                method: "PUT",
+                data: { id : bookId, title : title, authorName : authorName, desc : desc},
+                dataType: "text"
+            }).done(function(message){
+                console.log(message);
+                $(this).find("input[name=title]").prop('value',"");
+                $(this).find("input[name=authorName]").prop('value',"");
+                $(this).find("textarea[name=desc]").prop('value',"");
+            loadAllBooks();
+            }).fail(function(xhr,status,error){
+                console.log("AJAX failed when updating new book");
+            });
+
+            editBookForm.off("submit");
+            editBookForm.children().children("#submitBtn").attr("value", "Dodaj książkę");
+            editBookForm.children().children("#submitBtn").removeClass("btn-success");
+            editBookForm.children().children("#submitBtn").addClass("btn-primary");
+            addNewBook();        
+        });
+        
+    };
+        
     
     
     loadAllBooks();
     showHideBookInfo();
     addNewBook();
     deleteBook();
+    editBook();
     
     
 });
