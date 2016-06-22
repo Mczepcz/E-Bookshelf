@@ -8,4 +8,8 @@ dist/
 nbdist/
 nbactions.xml
 .nb-gradle/
+<<<<<<< HEAD
 nbproject/
+=======
+/nbproject/
+>>>>>>> 9fd5af95b5e3a25c5c43dd439b64633d011266fb
