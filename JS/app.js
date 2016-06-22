@@ -9,8 +9,8 @@ $(function(){
           bookList.empty();
           for(var i = 0; i < bookNamesArray.length; i++){
               var newLi = $("<li class='list-group-item lead'>");
-              var removeButton=$("<button class='delBtn btn btn-danger btn-sm pull-right'>Usuń</button>");
-              var showButton=$("<button class='showBtn btn btn-success btn-sm pull-right'>Więcej informacji</button>");
+              var removeButton=$("<button class='delBtn btn btn-danger btn-sm pull-right'>Delete</button>");
+              var showButton=$("<button class='showBtn btn btn-success btn-sm pull-right'>Show more info</button>");
               newLi.attr("data-id", bookNamesArray[i].id);
               newLi.text(bookNamesArray[i].name);
               newLi.append(showButton);
@@ -33,10 +33,10 @@ $(function(){
                 data: {id : bookId},
                 dataType: "json"
             }).done(function(book){
-                var newDiv =$("<div><h3>"+book.title+"</h3><button class='editBtn btn btn-success btn-sm '>Włącz edycje</button><p class='authorName'><small>Author: </small><br/>"+book.author_name +"</p><p><small>Description: </small><br/>"+book.description+"</p></div");
+                var newDiv =$("<div><h3>"+book.title+"</h3><button class='editBtn btn btn-success btn-sm '>Edit on</button><p class='authorName'><small>Author: </small><br/>"+book.author_name +"</p><p><small>Description: </small><br/>"+book.description+"</p></div");
                 showButton.parent().append(newDiv);
                 showButton.removeClass("showBtn");
-                showButton.text("Zwiń informacje");
+                showButton.text("Hide info");
                 showButton.addClass("hideBtn");
             }).fail(function(xhr,status,error){
                 console.log("AJAX failed when reading book with id");
@@ -45,7 +45,7 @@ $(function(){
         bookList.on("click",".hideBtn",function(event){
             var hideButton = $(this);
             hideButton.parent().find("div").remove();
-            hideButton.text("Więcej informacji");
+            hideButton.text("Show more info");
             hideButton.removeClass("hideBtn");
             hideButton.addClass("showBtn");
         });
@@ -100,23 +100,23 @@ $(function(){
         var bookList = $("#listWithBooks");
         bookList.on("click",".editBtn",function(event){
             var editBtn=$(this);
-            editBtn.text("Wyłącz edycję");
+            editBtn.text("Edit off");
             editBtn.removeClass("editBtn");
             editBtn.addClass("editOffBtn");
             var bookId=$(this).parent().parent().data("id"); 
             var editBookForm = $(this).parent().parent().parent().siblings("form");
-            editBookForm.children().children("#submitBtn").attr("value", "Zapisz zmiany");
+            editBookForm.children().children("#submitBtn").attr("value", "Save changes");
             editBookForm.off("submit");
             saveEditedBook(bookId);
             
         });
         bookList.on("click",".editOffBtn",function(event){
             var editOffBtn=$(this);
-            editOffBtn.text("Włącz edycję");
+            editOffBtn.text("Edit on");
             editOffBtn.removeClass("editOffBtn");
             editOffBtn.addClass("editBtn");
             var editBookForm = $(this).parent().parent().parent().siblings("form");
-            editBookForm.children().children("#submitBtn").attr("value", "Dodaj książkę");
+            editBookForm.children().children("#submitBtn").attr("value", "Add Book");
             editBookForm.children().children("#submitBtn").removeClass("btn-success");
             editBookForm.children().children("#submitBtn").addClass("btn-primary");
             editBookForm.off("submit");
@@ -126,7 +126,7 @@ $(function(){
     var saveEditedBook = function(id){
         var bookId = id;
         var editBookForm = $("#addBook");
-        editBookForm.children().children("#submitBtn").attr("value", "Zapisz zmiany");
+        editBookForm.children().children("#submitBtn").attr("value", "Save changes");
         editBookForm.children().children("#submitBtn").removeClass("btn-primary");
         editBookForm.children().children("#submitBtn").addClass("btn-success");
         editBookForm.one("submit","",bookId,function(event){
@@ -150,7 +150,7 @@ $(function(){
             });
 
             editBookForm.off("submit");
-            editBookForm.children().children("#submitBtn").attr("value", "Dodaj książkę");
+            editBookForm.children().children("#submitBtn").attr("value", "Add Book");
             editBookForm.children().children("#submitBtn").removeClass("btn-success");
             editBookForm.children().children("#submitBtn").addClass("btn-primary");
             addNewBook();        
